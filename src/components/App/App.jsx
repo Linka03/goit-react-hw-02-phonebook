@@ -1,3 +1,4 @@
+// App.jsx
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
 import ContactForm from '../ContactForm/ContactForm';
@@ -7,26 +8,15 @@ import Filter from '../Filter/Filter';
 class App extends Component {
   state = {
     contacts: [],
-    name: '',
-    number: '',
     filter: '',
-  };
-
-  handleChange = event => {
-    this.setState({ name: event.target.value });
-  };
-
-  handleChangeNumber = event => {
-    this.setState({ number: event.target.value });
   };
 
   handleChangeFilter = event => {
     this.setState({ filter: event.target.value });
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    const { name, number, contacts } = this.state;
+  handleSubmitContact = ({ name, number }) => {
+    const { contacts } = this.state;
 
     if (
       contacts.some(
@@ -40,8 +30,6 @@ class App extends Component {
     const newContact = { id: nanoid(), name, number };
     this.setState(prevState => ({
       contacts: [...prevState.contacts, newContact],
-      name: '',
-      number: '',
     }));
   };
 
@@ -60,19 +48,13 @@ class App extends Component {
   };
 
   render() {
-    const { name, number, filter } = this.state;
+    const { filter } = this.state;
     const filteredContacts = this.getFilteredContacts();
 
     return (
       <div>
         <h1>Phonebook</h1>
-        <ContactForm
-          name={name}
-          number={number}
-          onChange={this.handleChange}
-          onChangeNumber={this.handleChangeNumber}
-          onSubmit={this.handleSubmit}
-        />
+        <ContactForm onSubmit={this.handleSubmitContact} />
 
         <h2>Contacts</h2>
         <Filter value={filter} onChange={this.handleChangeFilter} />
